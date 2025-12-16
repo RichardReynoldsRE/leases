@@ -502,6 +502,55 @@
             .slide ul {
                 grid-template-columns: 1fr;
             }
+
+            .nav-btn {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
+        /* Navigation arrows */
+        .nav-arrows {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            color: var(--navy);
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: var(--navy);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-btn:disabled:hover {
+            background: white;
+            color: var(--navy);
+            transform: none;
         }
     </style>
 </head>
@@ -643,11 +692,19 @@
         <div class="progress-dot" data-goto="9"></div>
     </div>
 
+    <!-- Navigation arrows -->
+    <div class="nav-arrows">
+        <button class="nav-btn prev-btn" disabled>←</button>
+        <button class="nav-btn next-btn">→</button>
+    </div>
+
 
 
     <script>
         const slides = document.querySelectorAll('.slide');
         const dots = document.querySelectorAll('.progress-dot');
+        const prevBtn = document.querySelector('.prev-btn');
+        const nextBtn = document.querySelector('.next-btn');
         let currentSlide = 1;
         const totalSlides = slides.length;
 
@@ -660,8 +717,20 @@
             document.querySelector(`[data-slide="${n}"]`).classList.add('active');
             dots[n - 1].classList.add('active');
 
+            // Update buttons
+            prevBtn.disabled = n === 1;
+            nextBtn.disabled = n === totalSlides;
+
             currentSlide = n;
         }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 1) goToSlide(currentSlide - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+        });
 
         dots.forEach(dot => {
             dot.addEventListener('click', () => {
